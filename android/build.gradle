@@ -1,6 +1,7 @@
 
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
         google()
     }
@@ -34,11 +35,14 @@ repositories {
     mavenCentral()
     jcenter()
     google()
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url "$rootDir/../node_modules/react-native/android"
+    }
 }
 
 dependencies {
-//    implementation 'com.facebook.react:react-native:+'
-    implementation 'com.facebook.react:react-native:0.71.0-rc.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.facebook.react:react-native:+'
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
