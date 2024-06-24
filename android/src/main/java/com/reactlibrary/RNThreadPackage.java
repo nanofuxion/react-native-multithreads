@@ -10,24 +10,28 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 public class RNThreadPackage implements ReactPackage {
 
-    private ReactNativeHost reactNativeHost;
-    private ReactPackage additionalThreadPackages[];
+    private final ReactNativeHost reactNativeHost;
+    private final ReactPackage[] additionalThreadPackages;
 
     public RNThreadPackage(ReactNativeHost reactNativeHost, ReactPackage... additionalThreadPackages) {
         this.reactNativeHost = reactNativeHost;
         this.additionalThreadPackages = additionalThreadPackages;
     }
 
+    @NonNull
     @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+    public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {
         return Collections.emptyList();
     }
 
+    @NonNull
     @Override
-    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(
+    public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
+        return Collections.<NativeModule>singletonList(
                 new RNThreadModule(reactContext, reactNativeHost, additionalThreadPackages)
         );
     }

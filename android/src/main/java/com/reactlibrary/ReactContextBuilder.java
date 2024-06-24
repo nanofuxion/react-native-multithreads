@@ -1,5 +1,6 @@
 package com.reactlibrary;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 
@@ -26,7 +27,7 @@ import static com.facebook.react.modules.systeminfo.AndroidInfoHelpers.getFriend
 
 public class ReactContextBuilder {
 
-    private Context parentContext;
+    private final Context parentContext;
     private JSBundleLoader jsBundleLoader;
     private DevSupportManager devSupportManager;
     private ReactInstanceManager instanceManager;
@@ -115,6 +116,7 @@ public class ReactContextBuilder {
         ).get();
 
         catalystInstance.getReactQueueConfiguration().getUIQueueThread().callOnQueue(new Callable<Object>() {
+            @SuppressLint("VisibleForTests")
             @Override
             public Object call() throws Exception {
                 try {

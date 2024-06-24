@@ -6,6 +6,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import androidx.annotation.NonNull;
+
 @ReactModule(name = ThreadSelfModule.REACT_MODULE_NAME)
 public class ThreadSelfModule extends ReactContextBaseJavaModule {
     public static final String REACT_MODULE_NAME = "ThreadSelfManager";
@@ -22,6 +24,7 @@ public class ThreadSelfModule extends ReactContextBaseJavaModule {
         this.threadId = threadId;
     }
 
+    @NonNull
     @Override
     public String getName() {
         return REACT_MODULE_NAME;

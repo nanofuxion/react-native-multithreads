@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -32,13 +33,13 @@ import okio.Sink;
 
 public class RNThreadModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
-  private String TAG = "ThreadManager";
-  private HashMap<String, JSThread> threads;
-  private ReactApplicationContext reactApplicationContext;
+  private final String TAG = "ThreadManager";
+  private final HashMap<String, JSThread> threads;
+  private final ReactApplicationContext reactApplicationContext;
 
-  private ReactNativeHost reactNativeHost;
+  private final ReactNativeHost reactNativeHost;
 
-  private ReactPackage additionalThreadPackages[];
+  private final ReactPackage[] additionalThreadPackages;
 
   public RNThreadModule(final ReactApplicationContext reactContext, ReactNativeHost reactNativehost, ReactPackage additionalThreadPackages[]) {
     super(reactContext);
@@ -49,6 +50,7 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
     reactContext.addLifecycleEventListener(this);
   }
 
+  @NonNull
   @Override
   public String getName() {
     return "ThreadManager";
@@ -63,7 +65,7 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
   @ReactMethod
   public  void getAllMessages (final Promise promise) {
     Log.d(TAG, "Getting messages");
-    HashMap messagesClass = JSMessages.getInstance().messages;
+    HashMap<String, JSMessage> messagesClass = JSMessages.getInstance().messages;
     Gson gson = new Gson();
     String json = gson.toJson(messagesClass);
     promise.resolve(json);
@@ -81,7 +83,7 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
 
     JSBundleLoader bundleLoader = getDevSupportManager().getDevSupportEnabled()
             ? createDevBundleLoader(jsFileName, jsFileSlug)
-            : createReleaseBundleLoader(jsFileName, jsFileSlug);
+            : createReleaseBundleLoader(jsFileSlug);
 
     try {
       ArrayList<ReactPackage> threadPackages = new ArrayList<ReactPackage>(Arrays.asList(additionalThreadPackages));
@@ -217,7 +219,7 @@ public void removeListeners(Integer count) {
     return JSBundleLoader.createCachedBundleFromNetworkLoader(bundleUrl, bundleOut);
   }
 
-  private JSBundleLoader createReleaseBundleLoader(String jsFileName, String jsFileSlug) {
+  private JSBundleLoader createReleaseBundleLoader(String jsFileSlug) {
     Log.d(TAG, "createReleaseBundleLoader - reading file from assets");
     return JSBundleLoader.createAssetLoader(reactApplicationContext, "assets://threads/" + jsFileSlug + ".bundle", false);
   }
@@ -255,7 +257,8 @@ public void removeListeners(Integer count) {
       }
 
       Sink output = Okio.sink(out);
-      Okio.buffer(response.body().source()).readAll(output);
+        assert response.body() != null;
+        Okio.buffer(response.body().source()).readAll(output);
     } catch (IOException e) {
       throw new RuntimeException("Exception downloading thread script to file", e);
     }
